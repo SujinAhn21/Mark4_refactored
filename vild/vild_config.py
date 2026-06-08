@@ -4,7 +4,7 @@ import torch
 from sentence_transformers import SentenceTransformer
 import os
 
-SHARED_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "shared_vild"))
+SHARED_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "shared_vild"))
 if SHARED_DIR not in os.sys.path:
     os.sys.path.append(SHARED_DIR)
 
@@ -97,7 +97,7 @@ class AudioViLDConfig:
         # vild/ 기준 상위가 프로젝트 루트라고 가정
         self.project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
         self.audio_dir = os.path.join(self.project_root, "data")  # train/val/test 하위에 존재
-        self.prompt_bank_path = os.path.join(os.path.dirname(SHARED_DIR), "shared_vild", "resources", "prompt_bank.json")
+        self.prompt_bank_path = os.path.join(SHARED_DIR, "resources", "prompt_bank.json")
 
         # === 내부 캐시 ===
         self._text_emb = None

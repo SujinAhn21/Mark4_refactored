@@ -28,10 +28,10 @@ from vild_model import SimpleAudioEncoder, ViLDTextHead
 from vild_parser_teacher import AudioParser
 from vild_losses import ViLDLosses
 from seed_utils import set_seed
-SHARED_DIR = os.path.abspath(os.path.join(PROJECT_ROOT, "..", "shared_vild"))
+SHARED_DIR = os.path.abspath(os.path.join(PROJECT_ROOT, "shared_vild"))
 if SHARED_DIR not in sys.path:
     sys.path.append(SHARED_DIR)
-from checkpoint_utils import extract_config_metadata, save_checkpoint
+from checkpoint_utils import save_checkpoint
 
 def _resolve_csv_path(mark_version: str) -> str:
     candidates = [
@@ -120,9 +120,6 @@ def train_teacher(seed_value=42, mark_version="mark4.1"):
 
     text_emb = config.get_class_text_embeddings().to(device)
     label_map = config.get_target_label_map()
-    checkpoint_extra = extract_config_metadata(config)
-    checkpoint_extra["text_embeddings"] = text_emb.detach().cpu()
-
     for epoch in range(config.num_epochs):
         teacher_encoder.train(); teacher_classifier.train()
         total = 0.0
@@ -167,14 +164,16 @@ def train_teacher(seed_value=42, mark_version="mark4.1"):
                 model_type="teacher_encoder",
                 mark_version=mark_version,
                 model_state=teacher_encoder.state_dict(),
-                extra=checkpoint_extra,
+                text_embeddings=text_emb.detach().cpu(),
+                config=config,
             )
             save_checkpoint(
                 os.path.join(BASE_DIR, f"best_teacher_classifier_{mark_version}.pth"),
                 model_type="teacher_classifier",
                 mark_version=mark_version,
                 classifier_state=teacher_classifier.state_dict(),
-                extra=checkpoint_extra,
+                text_embeddings=text_emb.detach().cpu(),
+                config=config,
             )
             print("[INFO] Improved. Saved best teacher.")
         else:
@@ -189,7 +188,8 @@ def train_teacher(seed_value=42, mark_version="mark4.1"):
         mark_version=mark_version,
         model_state=teacher_encoder.state_dict(),
         classifier_state=teacher_classifier.state_dict(),
-        extra=checkpoint_extra,
+        text_embeddings=text_emb.detach().cpu(),
+        config=config,
     )
 
     # 손실 그래프

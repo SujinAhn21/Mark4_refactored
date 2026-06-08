@@ -30,7 +30,7 @@ from vild_model import SimpleAudioEncoder, ViLDTextHead
 from vild_head import DualBranchStudentHead
 from vild_parser_student import AudioParser
 from seed_utils import set_seed
-SHARED_DIR = os.path.abspath(os.path.join(PROJECT_ROOT, "..", "shared_vild"))
+SHARED_DIR = os.path.abspath(os.path.join(PROJECT_ROOT, "shared_vild"))
 if SHARED_DIR not in sys.path:
     sys.path.append(SHARED_DIR)
 from checkpoint_utils import save_checkpoint

@@ -19,7 +19,7 @@ for p in (PROJECT_ROOT, UTILS_DIR, VILD_DIR, MODEL_DIR):
 from vild_config import AudioViLDConfig
 from vild_model import SimpleAudioEncoder, ViLDTextHead
 from vild_parser_teacher import AudioParser
-SHARED_DIR = os.path.abspath(os.path.join(PROJECT_ROOT, "..", "shared_vild"))
+SHARED_DIR = os.path.abspath(os.path.join(PROJECT_ROOT, "shared_vild"))
 if SHARED_DIR not in sys.path:
     sys.path.append(SHARED_DIR)
 from checkpoint_utils import load_checkpoint, resolve_state_dict
